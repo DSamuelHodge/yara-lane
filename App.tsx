@@ -8,8 +8,18 @@ import { Button } from './components/Button';
 import { About } from './components/About';
 import { Journal } from './components/Journal';
 import { Checkout } from './components/Checkout';
-import { PRODUCTS, CATEGORIES } from './constants';
 import { Product, CartItem, Category, ViewState } from './types';
+import { MyAccount } from './components/MyAccount';
+import { Auth } from './components/Auth';
+import { 
+  PRODUCTS, 
+  CATEGORIES, 
+  MOCK_USER, 
+  MOCK_ORDERS, 
+  MOCK_ADDRESSES, 
+  MOCK_PAYMENT_METHODS 
+} from './constants';
+
 
 function App() {
   // State
@@ -21,13 +31,24 @@ function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Default to false to show Login flow
+  const [currentUser, setCurrentUser] = useState(MOCK_USER);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Computed
   const filteredProducts = currentView === 'wishlist' 
     ? PRODUCTS.filter(p => wishlistIds.includes(p.id))
-    : (selectedCategory === 'All' 
-        ? PRODUCTS 
-        : PRODUCTS.filter(p => p.category === selectedCategory));
+    : PRODUCTS.filter(p => {
+        const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+        const matchesSearch = searchTerm.trim() === '' ||
+          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          p.category.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesCategory && matchesSearch;
+      });
+
+  // Products in wishlist
+  const wishlistProducts = PRODUCTS.filter(p => wishlistIds.includes(p.id));
 
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const cartTotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
@@ -75,17 +96,44 @@ function App() {
     setCartItems(prev => prev.filter(item => item.id !== id));
   };
 
+
   const handleCheckout = () => {
     setIsCartOpen(false);
     setCurrentView('checkout');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // --- Auth Handlers ---
+  const handleAuthSuccess = (user) => {
+    setCurrentUser(user);
+    setIsLoggedIn(true);
+    navigateTo('account');
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    navigateTo('shop');
+  };
+
+  const handleDeleteAccount = () => {
+    setIsLoggedIn(false);
+    navigateTo('shop');
+    alert("Your account has been permanently deleted.");
+  };
+
+
+  // --- Navigation ---
   const navigateTo = (view: ViewState) => {
-    setCurrentView(view);
+    // Auth Guard for Account view
+    if (view === 'account' && !isLoggedIn) {
+      setCurrentView('login');
+    } else {
+      setCurrentView(view);
+    }
     setIsMobileMenuOpen(false); // Close mobile menu if open
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
 
   const renderContent = () => {
     switch (currentView) {
@@ -95,6 +143,28 @@ function App() {
         return <Journal />;
       case 'checkout':
         return <Checkout cartItems={cartItems} total={cartTotal} />;
+      case 'login':
+        return (
+          <Auth 
+            onLogin={handleAuthSuccess}
+            onSignup={handleAuthSuccess}
+          />
+        );
+      case 'account':
+        return (
+          <MyAccount 
+            user={currentUser}
+            orders={MOCK_ORDERS}
+            addresses={MOCK_ADDRESSES}
+            paymentMethods={MOCK_PAYMENT_METHODS}
+            wishlistProducts={wishlistProducts}
+            onLogout={handleLogout}
+            onDeleteAccount={handleDeleteAccount}
+            onProductClick={handleProductClick}
+            onAddToCart={handleAddToCart}
+            onToggleWishlist={handleToggleWishlist}
+          />
+        );
       case 'shop':
       case 'wishlist':
       default:
@@ -184,6 +254,8 @@ function App() {
           <button 
             className="md:hidden p-2 -ml-2 text-stone-900"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            title="Open menu"
+            aria-label="Open menu"
           >
             <Menu strokeWidth={1.5} />
           </button>
@@ -222,10 +294,56 @@ function App() {
 
           {/* Actions */}
           <div className="flex items-center gap-4">
-            <button className="hidden md:flex nav-icon-btn">
-              <Search className="w-5 h-5" strokeWidth={1.5} />
+            {/* Search Icon triggers bar */}
+            <div className="relative hidden md:block">
+              {!searchOpen ? (
+                <button
+                  className="nav-icon-btn"
+                  title="Search"
+                  aria-label="Search"
+                  onClick={() => setSearchOpen(true)}
+                >
+                  <Search className="w-5 h-5" strokeWidth={1.5} />
+                </button>
+              ) : (
+                <form
+                  className="searchbar-expand"
+                  onSubmit={e => e.preventDefault()}
+                >
+                  <span className="searchbar-icon">
+                    <Search className="w-5 h-5" strokeWidth={1.5} />
+                  </span>
+                  <input
+                    type="text"
+                    className="searchbar-input"
+                    autoFocus
+                    placeholder="Search products..."
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    aria-label="Search products"
+                  />
+                  <button
+                    type="button"
+                    className="searchbar-close"
+                    title="Close search"
+                    aria-label="Close search"
+                    onClick={() => { setSearchOpen(false); setSearchTerm(''); }}
+                  >
+                    ×
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* Account Button */}
+            <button 
+              className={`hidden md:flex nav-icon-btn ${currentView === 'account' ? 'active' : ''}`}
+              onClick={() => navigateTo('account')}
+              aria-label="My Account"
+            >
+              <User className="w-5 h-5" strokeWidth={1.5} fill={currentView === 'account' ? 'currentColor' : 'none'} />
             </button>
-            
+
             <button 
               className={`hidden md:flex nav-icon-btn ${currentView === 'wishlist' ? 'active' : ''}`}
               onClick={() => navigateTo('wishlist')}
@@ -278,6 +396,13 @@ function App() {
         >
           <Grid className="w-5 h-5" strokeWidth={1.5} />
           <span className="text-[10px] font-medium">Read</span>
+        </button>
+        <button 
+          className={`flex flex-col items-center gap-1 ${currentView === 'account' ? 'text-stone-900' : 'text-stone-400'}`}
+          onClick={() => navigateTo('account')}
+        >
+          <User className="w-5 h-5" strokeWidth={1.5} />
+          <span className="text-[10px] font-medium">Account</span>
         </button>
         <button 
           className={`flex flex-col items-center gap-1 ${currentView === 'wishlist' ? 'text-stone-900' : 'text-stone-400'}`}

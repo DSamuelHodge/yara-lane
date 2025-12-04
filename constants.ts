@@ -1,6 +1,6 @@
-import { Product, JournalPost } from './types';
+import { Product, JournalPost, UserProfile, Order, Address, PaymentMethod } from './types';
 
-export const HERO_IMAGE = "https://picsum.photos/id/433/1920/1080"; // Moody dark minimalist
+export const HERO_IMAGE = "https://iili.io/KsRdHP9.jpg"; // Moody dark minimalist
 
 export const CATEGORIES = ['All', 'Skincare', 'Fragrance', 'Accessories', 'Sets'];
 
@@ -115,5 +115,81 @@ export const JOURNAL_POSTS: JournalPost[] = [
     category: 'Rituals',
     image: 'https://picsum.photos/id/292/800/600',
     readTime: '4 min read'
+  }
+];
+
+// --- Mock User Data ---
+
+export const MOCK_USER: UserProfile = {
+  name: 'Isabella V',
+  email: 'isabella.v@example.com',
+  memberSince: 'September 2024'
+};
+
+export const MOCK_ORDERS: Order[] = [
+  {
+    id: '#YL-8402',
+    date: 'Oct 15, 2024',
+    status: 'Processing',
+    total: 205.00,
+    items: [
+      { name: 'Midnight Recovery Serum', quantity: 1, image: PRODUCTS[0].image },
+      { name: 'Silk Heritage Scarf', quantity: 1, image: PRODUCTS[1].image }
+    ]
+  },
+  {
+    id: '#YL-7933',
+    date: 'Sep 28, 2024',
+    status: 'Delivered',
+    total: 65.00,
+    items: [
+      { name: 'Oud & Amber Candle', quantity: 1, image: PRODUCTS[2].image }
+    ]
+  },
+  {
+    id: '#YL-7105',
+    date: 'Sep 10, 2024',
+    status: 'Delivered',
+    total: 150.00,
+    items: [
+      { name: 'Gold Vermeil Hoop Earrings', quantity: 1, image: PRODUCTS[4].image }
+    ]
+  }
+];
+
+export const MOCK_ADDRESSES: Address[] = [
+  {
+    id: 'a1',
+    type: 'Shipping',
+    firstName: 'Isabella',
+    lastName: 'V',
+    line1: '4205 Fifth Avenue',
+    line2: 'Apt 8B',
+    city: 'New York',
+    postalCode: '10018',
+    country: 'United States',
+    isDefault: true
+  },
+  {
+    id: 'a2',
+    type: 'Billing',
+    firstName: 'Isabella',
+    lastName: 'V',
+    line1: '4205 Fifth Avenue',
+    line2: 'Apt 8B',
+    city: 'New York',
+    postalCode: '10018',
+    country: 'United States',
+    isDefault: true
+  }
+];
+
+export const MOCK_PAYMENT_METHODS: PaymentMethod[] = [
+  {
+    id: 'pm1',
+    brand: 'Visa',
+    last4: '4242',
+    expiry: '12/26',
+    isDefault: true
   }
 ];

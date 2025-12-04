@@ -17,8 +17,8 @@ export const Checkout: React.FC<CheckoutProps> = ({ cartItems, total }) => {
           <h2 className="checkout-header">Contact Information</h2>
           <div className="form-grid">
             <div className="form-group form-grid-full">
-              <label className="form-label">Email Address</label>
-              <input type="email" className="form-input" placeholder="you@example.com" />
+                  <label className="form-label" htmlFor="email">Email Address</label>
+                  <input type="email" id="email" name="email" className="form-input" placeholder="you@example.com" autoComplete="email" />
             </div>
           </div>
         </div>
@@ -26,39 +26,39 @@ export const Checkout: React.FC<CheckoutProps> = ({ cartItems, total }) => {
         <div className="checkout-section">
           <h2 className="checkout-header">Shipping Address</h2>
           <div className="form-grid">
-            <div className="form-group">
-              <label className="form-label">First Name</label>
-              <input type="text" className="form-input" />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Last Name</label>
-              <input type="text" className="form-input" />
-            </div>
-            <div className="form-group form-grid-full">
-              <label className="form-label">Address</label>
-              <input type="text" className="form-input" placeholder="123 Luxury Lane" />
-            </div>
-            <div className="form-group form-grid-full">
-              <label className="form-label">Apartment, suite, etc.</label>
-              <input type="text" className="form-input" />
-            </div>
-            <div className="form-group">
-              <label className="form-label">City</label>
-              <input type="text" className="form-input" />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Postal Code</label>
-              <input type="text" className="form-input" />
-            </div>
-            <div className="form-group form-grid-full">
-              <label className="form-label">Country</label>
-              <select className="form-input bg-white">
-                <option>United States</option>
-                <option>United Kingdom</option>
-                <option>Canada</option>
-                <option>Australia</option>
-              </select>
-            </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" className="form-input" autoComplete="given-name" />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" className="form-input" autoComplete="family-name" />
+              </div>
+              <div className="form-group form-grid-full">
+                <label className="form-label" htmlFor="address">Address</label>
+                <input type="text" id="address" name="address" className="form-input" placeholder="123 Luxury Lane" autoComplete="address-line1" />
+              </div>
+              <div className="form-group form-grid-full">
+                <label className="form-label" htmlFor="apartment">Apartment, suite, etc.</label>
+                <input type="text" id="apartment" name="apartment" className="form-input" autoComplete="address-line2" />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="city">City</label>
+                <input type="text" id="city" name="city" className="form-input" autoComplete="address-level2" />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="postalCode">Postal Code</label>
+                <input type="text" id="postalCode" name="postalCode" className="form-input" autoComplete="postal-code" />
+              </div>
+              <div className="form-group form-grid-full">
+                <label className="form-label" htmlFor="country">Country</label>
+                <select id="country" name="country" className="form-input bg-white" autoComplete="country">
+                  <option>United States</option>
+                  <option>United Kingdom</option>
+                  <option>Canada</option>
+                  <option>Australia</option>
+                </select>
+              </div>
           </div>
         </div>
 

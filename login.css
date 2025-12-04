@@ -1,0 +1,164 @@
+/* login.css - Specific styles for Authentication View */
+@import 'tailwindcss';
+
+.auth-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  background-color: var(--stone-50);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 28rem;
+  background-color: white;
+  padding: 3rem 2.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--stone-200);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+  animation: slideUpFade 0.6s ease-out;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.auth-title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--stone-900);
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.auth-subtitle {
+  color: var(--stone-500);
+  font-size: 0.875rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  color: var(--stone-400);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--stone-200);
+}
+
+.auth-divider::before {
+  margin-right: 1rem;
+}
+
+.auth-divider::after {
+  margin-left: 1rem;
+}
+
+.social-login-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--stone-300);
+  background-color: white;
+  color: var(--stone-600);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.125rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.social-login-btn:hover {
+  background-color: var(--stone-50);
+  color: var(--stone-900);
+  border-color: var(--stone-400);
+}
+
+.auth-toggle-text {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--stone-500);
+}
+
+.auth-toggle-link {
+  color: var(--stone-900);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--stone-300);
+  text-underline-offset: 4px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 0.25rem;
+}
+
+.auth-toggle-link:hover {
+  text-decoration-color: var(--stone-900);
+}
+
+/* Alert/Notification inside Auth */
+.auth-alert {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #991b1b;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Danger Zone styles for Delete Profile */
+.danger-zone {
+  margin-top: 4rem;
+  padding: 2rem;
+  border: 1px solid #fee2e2;
+  background-color: #fff9f9;
+  border-radius: 0.25rem;
+}
+
+.danger-title {
+  color: #991b1b;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.danger-desc {
+  color: var(--stone-500);
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-danger {
+  background-color: #ffffff;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+}
+
+.btn-danger:hover {
+  background-color: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}

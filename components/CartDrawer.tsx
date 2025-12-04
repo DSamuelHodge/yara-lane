@@ -37,7 +37,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-stone-200">
             <h2 className="font-serif text-2xl text-stone-900">Your Bag</h2>
-            <button onClick={onClose} className="p-2 hover:bg-stone-100 rounded-full transition-colors">
+            <button 
+              onClick={onClose} 
+              className="p-2 hover:bg-stone-100 rounded-full transition-colors"
+              title="Close cart"
+              aria-label="Close cart"
+            >
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -66,6 +71,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         <button 
                           onClick={() => onUpdateQuantity(item.id, -1)}
                           className="quantity-btn"
+                          title="Decrease quantity"
+                          aria-label="Decrease quantity"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
@@ -73,6 +80,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         <button 
                           onClick={() => onUpdateQuantity(item.id, 1)}
                           className="quantity-btn"
+                          title="Increase quantity"
+                          aria-label="Increase quantity"
                         >
                           <Plus className="w-3 h-3" />
                         </button>

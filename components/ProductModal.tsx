@@ -97,6 +97,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
         <button 
           onClick={onClose}
           className="modal-close-btn"
+          title="Close"
         >
           <X className="w-5 h-5 text-stone-900" />
         </button>

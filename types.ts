@@ -33,5 +33,44 @@ export interface JournalPost {
   readTime: string;
 }
 
+export interface Address {
+  id: string;
+  type: 'Billing' | 'Shipping';
+  firstName: string;
+  lastName: string;
+  line1: string;
+  line2?: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  isDefault: boolean;
+}
+
+export interface PaymentMethod {
+  id: string;
+  brand: 'Visa' | 'Mastercard' | 'Amex';
+  last4: string;
+  expiry: string;
+  isDefault: boolean;
+}
+
+export interface Order {
+  id: string;
+  date: string;
+  status: 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  total: number;
+  items: {
+    name: string;
+    quantity: number;
+    image: string;
+  }[];
+}
+
+export interface UserProfile {
+  name: string;
+  email: string;
+  memberSince: string;
+}
+
 export type Category = 'All' | 'Skincare' | 'Fragrance' | 'Accessories' | 'Sets';
-export type ViewState = 'shop' | 'wishlist' | 'about' | 'journal' | 'checkout';
+export type ViewState = 'shop' | 'wishlist' | 'about' | 'journal' | 'checkout' | 'account' | 'login';
