@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Toast } from '../components/Toast';
+import '../styles/toast.css';
 import { X, Sparkles, ShoppingBag, Heart, Share2, Check } from 'lucide-react';
 import { Product } from '../types/types';
 import { Button } from '../components/Button';
@@ -27,6 +29,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   const [hasGenerated, setHasGenerated] = useState(false);
   const [showShareTooltip, setShowShareTooltip] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   // Reset state when product changes
   useEffect(() => {
@@ -79,11 +82,17 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   const handleAddToCart = () => {
     onAddToCart(product);
     setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 2000); // Revert after 2s
+    setShowToast(true);
+    setTimeout(() => {
+      setIsAdded(false);
+      setShowToast(false);
+    }, 2000); // Revert after 2s and hide toast
   };
 
   return (
     <div className="modal-container">
+      {/* Toast Notification */}
+      <Toast message="Added to Bag!" visible={showToast} />
       {/* Backdrop */}
       <div 
         className="modal-backdrop"
