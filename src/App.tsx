@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Check } from 'lucide-react';
 import { Menu, Search, ShoppingBag, User, Home, Grid, Heart, ChevronRight } from 'lucide-react';
 import { Hero } from './features/Hero';
+import { CollectionsGrid } from './features/CollectionsGrid';
 import { ProductCard } from './features/ProductCard';
 import { ProductModal } from './features/ProductModal';
 import { CartDrawer } from './features/CartDrawer';
@@ -183,6 +184,9 @@ function App() {
           <>
             {/* Show Hero only on main Shop view, not Wishlist */}
             {currentView === 'shop' && <Hero />}
+
+              {/* Collections Grid - Only show in Shop view */}
+              {currentView === 'shop' && <CollectionsGrid />}
 
             <section id="shop-section" className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
               
