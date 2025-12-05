@@ -1,5 +1,5 @@
 import React from 'react';
-import { JOURNAL_POSTS } from '../constants';
+import { JOURNAL_POSTS } from '../constants/constants';
 import { ArrowRight } from 'lucide-react';
 
 export const Journal: React.FC = () => {

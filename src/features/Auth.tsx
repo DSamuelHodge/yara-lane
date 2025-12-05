@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from './Button';
-import { UserProfile } from '../types';
+import { Button } from '../components/Button';
+import { UserProfile } from '../types/types';
 import { Mail, Lock, User, ArrowRight } from 'lucide-react';
 
 interface AuthProps {

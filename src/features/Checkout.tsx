@@ -1,6 +1,6 @@
 import React from 'react';
-import { CartItem } from '../types';
-import { Button } from './Button';
+import { CartItem } from '../types/types';
+import { Button } from '../components/Button';
 import { Lock, CreditCard, ShieldCheck } from 'lucide-react';
 
 interface CheckoutProps {

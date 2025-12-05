@@ -1,6 +1,6 @@
 import React from 'react';
-import { HERO_IMAGE } from '../constants';
-import { Button } from './Button';
+import { HERO_IMAGE } from '../constants/constants';
+import { Button } from '../components/Button';
 
 export const Hero: React.FC = () => {
   return (

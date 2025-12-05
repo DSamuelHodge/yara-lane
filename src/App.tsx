@@ -104,7 +104,7 @@ function App() {
   }
 
   // --- Auth Handlers ---
-  const handleAuthSuccess = (user) => {
+  const handleAuthSuccess = (user: any) => {
     setCurrentUser(user);
     setIsLoggedIn(true);
     navigateTo('account');

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Sparkles, ShoppingBag, Heart, Share2, Check } from 'lucide-react';
-import { Product } from '../types';
-import { Button } from './Button';
+import { Product } from '../types/types';
+import { Button } from '../components/Button';
 import { StarRating } from './StarRating';
 import { generateProductDescription } from '../services/geminiService';
 

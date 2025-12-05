@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Product } from '../types';
+import { Product } from '../types/types';
 import { Plus, Heart, Check } from 'lucide-react';
 import { StarRating } from './StarRating';
 

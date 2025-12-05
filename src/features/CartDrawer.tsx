@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, Minus, Plus, ShoppingBag } from 'lucide-react';
-import { CartItem } from '../types';
-import { Button } from './Button';
+import { CartItem } from '../types/types';
+import { Button } from '../components/Button';
 
 interface CartDrawerProps {
   isOpen: boolean;

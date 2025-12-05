@@ -11,9 +11,9 @@ import {
   ChevronRight,
   AlertTriangle
 } from 'lucide-react';
-import { Product, Order, Address, PaymentMethod, UserProfile } from '../types';
+import { Product, Order, Address, PaymentMethod, UserProfile } from '../types/types';
 import { ProductCard } from './ProductCard';
-import { Button } from './Button';
+import { Button } from '../components/Button';
 import { AddressModal } from './AddressModal';
 import { PaymentModal } from './PaymentModal';
 

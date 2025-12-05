@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, CreditCard, Lock } from 'lucide-react';
-import { PaymentMethod } from '../types';
-import { Button } from './Button';
+import { PaymentMethod } from '../types/types';
+import { Button } from '../components/Button';
 
 interface PaymentModalProps {
   isOpen: boolean;

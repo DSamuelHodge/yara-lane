@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { Address } from '../types';
-import { Button } from './Button';
+import { Address } from '../types/types';
+import { Button } from '../components/Button';
 
 interface AddressModalProps {
   isOpen: boolean;
@@ -63,8 +63,8 @@ export const AddressModal: React.FC<AddressModalProps> = ({
     e.preventDefault();
     // Basic validation could go here
     onSave({
-      id: initialData?.id || Math.random().toString(36).substr(2, 9),
-      ...formData as Address
+      ...formData as Address,
+      id: initialData?.id || Math.random().toString(36).substr(2, 9)
     });
   };
 
