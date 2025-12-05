@@ -1,4 +1,4 @@
-import { Product, JournalPost, UserProfile, Order, Address, PaymentMethod } from './types';
+import { Product, JournalPost, UserProfile, Order, Address, PaymentMethod } from '../types/types';
 
 export const HERO_IMAGE = "https://iili.io/KsRdHP9.jpg"; // Moody dark minimalist
 

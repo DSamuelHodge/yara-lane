@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Menu, Search, ShoppingBag, User, Home, Grid, Heart, ChevronRight } from 'lucide-react';
-import { Hero } from './components/Hero';
-import { ProductCard } from './components/ProductCard';
-import { ProductModal } from './components/ProductModal';
-import { CartDrawer } from './components/CartDrawer';
+import { Hero } from './features/Hero';
+import { ProductCard } from './features/ProductCard';
+import { ProductModal } from './features/ProductModal';
+import { CartDrawer } from './features/CartDrawer';
 import { Button } from './components/Button';
-import { About } from './components/About';
-import { Journal } from './components/Journal';
-import { Checkout } from './components/Checkout';
-import { Product, CartItem, Category, ViewState } from './types';
-import { MyAccount } from './components/MyAccount';
-import { Auth } from './components/Auth';
+import { About } from './features/About';
+import { Journal } from './features/Journal';
+import { Checkout } from './features/Checkout';
+import { Product, CartItem, Category, ViewState } from './types/types';
+import { MyAccount } from './features/MyAccount';
+import { Auth } from './features/Auth';
 import { 
   PRODUCTS, 
   CATEGORIES, 
@@ -18,7 +18,7 @@ import {
   MOCK_ORDERS, 
   MOCK_ADDRESSES, 
   MOCK_PAYMENT_METHODS 
-} from './constants';
+} from './constants/constants';
 
 
 function App() {
