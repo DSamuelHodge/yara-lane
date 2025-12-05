@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Check } from 'lucide-react';
 import { Menu, Search, ShoppingBag, User, Home, Grid, Heart, ChevronRight } from 'lucide-react';
 import { Hero } from './features/Hero';
 import { ProductCard } from './features/ProductCard';
@@ -8,7 +9,7 @@ import { Button } from './components/Button';
 import { About } from './features/About';
 import { Journal } from './features/Journal';
 import { Checkout } from './features/Checkout';
-import { Product, CartItem, Category, ViewState } from './types/types';
+import { Product, CartItem, Category, ViewState, UserProfile } from './types/types';
 import { MyAccount } from './features/MyAccount';
 import { Auth } from './features/Auth';
 import { 
@@ -36,6 +37,9 @@ function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Toast State
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: '', visible: false });
+  
   // Computed
   const filteredProducts = currentView === 'wishlist' 
     ? PRODUCTS.filter(p => wishlistIds.includes(p.id))
@@ -59,9 +63,15 @@ function App() {
     setIsProductModalOpen(true);
   };
 
+  const showToast = (message: string) => {
+    setToast({ message, visible: true });
+    setTimeout(() => {
+      setToast(prev => ({ ...prev, visible: false }));
+    }, 3000);
+  };
+
   const handleAddToCart = (product: Product, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    
     setCartItems(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
@@ -71,6 +81,7 @@ function App() {
       }
       return [...prev, { ...product, quantity: 1 }];
     });
+    showToast(`Added ${product.name} to your bag`);
   };
 
   const handleToggleWishlist = (product: Product, e?: React.MouseEvent) => {
@@ -245,6 +256,14 @@ function App() {
 
   return (
     <div className="min-h-screen pb-20 md:pb-0">
+      
+      {/* Toast Notification */}
+      <div className="toast-container">
+        <div className={`toast ${toast.visible ? 'visible' : ''}`}>
+          <Check className="w-4 h-4 text-emerald-400" strokeWidth={3} />
+          {toast.message}
+        </div>
+      </div>
       
       {/* Navbar */}
       <nav className="navbar">

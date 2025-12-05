@@ -4,7 +4,6 @@ import App from './App';
 import './styles/styles.css';
 import './styles/myaccount.css';
 import './styles/login.css';
-import './styles/toast.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

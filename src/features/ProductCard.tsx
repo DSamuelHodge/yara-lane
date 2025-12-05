@@ -55,7 +55,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           aria-label={isAdded ? "Added to cart" : `Add ${product.name} to cart`}
         >
           {isAdded ? (
-            <Check className="w-5 h-5 text-stone-50" strokeWidth={2} />
+            <Check className="w-5 h-5 text-stone-50 animate-pop-in" strokeWidth={2} />
           ) : (
             <Plus className="w-5 h-5" strokeWidth={1.5} />
           )}
