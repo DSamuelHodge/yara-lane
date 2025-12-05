@@ -87,16 +87,18 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, onSignup }) => {
           
           {!isLoginView && (
             <div className="form-group">
-              <label className="form-label">Full Name</label>
+              <label className="form-label" htmlFor="auth-fullname">Full Name</label>
               <div className="relative">
                 <input
                   type="text"
+                  id="auth-fullname"
                   name="name"
+                  autoComplete="name"
                   value={formData.name}
                   onChange={handleChange}
                   className="form-input w-full pl-10"
                   placeholder="Isabella V"
-                  required={!isLoginView}
+                  required={!isLoginView ? true : undefined}
                 />
                 <User className="w-5 h-5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
               </div>
@@ -104,11 +106,13 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, onSignup }) => {
           )}
 
           <div className="form-group">
-            <label className="form-label">Email Address</label>
+            <label className="form-label" htmlFor="auth-email">Email Address</label>
             <div className="relative">
               <input
                 type="email"
+                id="auth-email"
                 name="email"
+                autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
                 className="form-input w-full pr-10"
@@ -120,11 +124,13 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, onSignup }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Password</label>
+            <label className="form-label" htmlFor="auth-password">Password</label>
             <div className="relative">
               <input
                 type="password"
+                id="auth-password"
                 name="password"
+                autoComplete={isLoginView ? 'current-password' : 'new-password'}
                 value={formData.password}
                 onChange={handleChange}
                 className="form-input w-full pr-10"

@@ -94,10 +94,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
         <form onSubmit={handleSubmit} className="form-grid">
           
           <div className="form-group form-grid-full">
-            <label className="form-label">Card Number</label>
+            <label className="form-label" htmlFor="payment-card-number">Card Number</label>
             <div className="relative">
               <input 
                 type="text" 
+                id="payment-card-number"
+                name="cardNumber"
+                autoComplete="cc-number"
                 value={cardNumber} 
                 onChange={handleCardNumberChange} 
                 className={`form-input w-full pr-10 ${initialData ? 'bg-stone-100 text-stone-500 cursor-not-allowed' : ''}`}
@@ -110,9 +113,12 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
           </div>
 
           <div className="form-group">
-            <label className="form-label">Expiry Date (MM/YY)</label>
+            <label className="form-label" htmlFor="payment-expiry">Expiry Date (MM/YY)</label>
             <input 
               type="text" 
+              id="payment-expiry"
+              name="expiry"
+              autoComplete="cc-exp"
               value={expiry} 
               onChange={(e) => setExpiry(e.target.value)} 
               className="form-input" 
@@ -123,10 +129,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
           </div>
 
           <div className="form-group">
-            <label className="form-label">CVC / CVV</label>
+            <label className="form-label" htmlFor="payment-cvc">CVC / CVV</label>
             <div className="relative">
               <input 
                 type="password" 
+                id="payment-cvc"
+                name="cvc"
+                autoComplete="cc-csc"
                 value={cvc} 
                 onChange={(e) => setCvc(e.target.value)} 
                 className={`form-input w-full ${initialData ? 'bg-stone-100 cursor-not-allowed' : ''}`}

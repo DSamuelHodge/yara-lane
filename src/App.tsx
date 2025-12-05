@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Check } from 'lucide-react';
 import { Menu, Search, ShoppingBag, User, Home, Grid, Heart, ChevronRight } from 'lucide-react';
 import { Hero } from './features/Hero';
@@ -34,25 +34,46 @@ function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Default to false to show Login flow
-  const [currentUser, setCurrentUser] = useState(MOCK_USER);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [currentUser, setCurrentUser] = useState<UserProfile>(MOCK_USER);
+  
+  // Search State
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Toast State
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: '', visible: false });
-  
-  // Computed
-  const filteredProducts = currentView === 'wishlist' 
-    ? PRODUCTS.filter(p => wishlistIds.includes(p.id))
-    : PRODUCTS.filter(p => {
-        const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
-        const matchesSearch = searchTerm.trim() === '' ||
-          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          p.category.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesCategory && matchesSearch;
-      });
 
-  // Products in wishlist
+  // Computed - Filter Logic with Search
+  const filteredProducts = React.useMemo(() => {
+    let products = PRODUCTS;
+
+    // First Apply View/Category Filter
+    if (currentView === 'wishlist') {
+      products = products.filter(p => wishlistIds.includes(p.id));
+    } else if (currentView === 'shop') {
+      if (selectedCategory !== 'All') {
+        products = products.filter(p => p.category === selectedCategory);
+      }
+    } else {
+      // For other views like 'about', 'journal', we generally don't show the product grid unless searching?
+      // But if user searches in nav, we switch view to shop usually.
+      // Handled in handleSearchChange
+    }
+
+    // Apply Search Filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      products = products.filter(p => 
+        p.name.toLowerCase().includes(query) || 
+        p.category.toLowerCase().includes(query) ||
+        p.shortDescription.toLowerCase().includes(query)
+      );
+    }
+    
+    return products;
+  }, [currentView, selectedCategory, wishlistIds, searchQuery]);
+  
   const wishlistProducts = PRODUCTS.filter(p => wishlistIds.includes(p.id));
 
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -73,6 +94,7 @@ function App() {
 
   const handleAddToCart = (product: Product, e?: React.MouseEvent) => {
     e?.stopPropagation();
+    
     setCartItems(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
@@ -82,6 +104,7 @@ function App() {
       }
       return [...prev, { ...product, quantity: 1 }];
     });
+    
     showToast(`Added ${product.name} to your bag`);
   };
 
@@ -108,15 +131,40 @@ function App() {
     setCartItems(prev => prev.filter(item => item.id !== id));
   };
 
-
   const handleCheckout = () => {
     setIsCartOpen(false);
     setCurrentView('checkout');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // --- Search Handler ---
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    // If user starts typing and not in shop/wishlist, go to shop to see results
+    if (e.target.value && currentView !== 'shop' && currentView !== 'wishlist') {
+      setCurrentView('shop');
+    }
+  };
+
+  const toggleSearch = () => {
+    const nextState = !isSearchOpen;
+    setIsSearchOpen(nextState);
+    if (nextState) {
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    } else {
+      setSearchQuery(''); // Clear search on close? Or keep it? Keeping it implies filter remains. 
+      // User might want to close bar but keep filter? 
+      // Standard behavior: closing search bar usually clears it or user clears it. 
+      // Let's clear it if empty, but if user clicks close while text exists, maybe just hide input?
+      // For simplicity, let's keep the query active unless manually cleared, but closing the bar visually.
+    }
+  };
+
   // --- Auth Handlers ---
-  const handleAuthSuccess = (user: any) => {
+
+  const handleAuthSuccess = (user: UserProfile) => {
     setCurrentUser(user);
     setIsLoggedIn(true);
     navigateTo('account');
@@ -125,7 +173,7 @@ function App() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     navigateTo('shop');
-  };
+  }
 
   const handleDeleteAccount = () => {
     setIsLoggedIn(false);
@@ -133,8 +181,8 @@ function App() {
     alert("Your account has been permanently deleted.");
   };
 
-
   // --- Navigation ---
+
   const navigateTo = (view: ViewState) => {
     // Auth Guard for Account view
     if (view === 'account' && !isLoggedIn) {
@@ -145,7 +193,6 @@ function App() {
     setIsMobileMenuOpen(false); // Close mobile menu if open
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
 
   const renderContent = () => {
     switch (currentView) {
@@ -182,22 +229,26 @@ function App() {
       default:
         return (
           <>
-            {/* Show Hero only on main Shop view, not Wishlist */}
-            {currentView === 'shop' && <Hero />}
-
-              {/* Collections Grid - Only show in Shop view */}
-              {currentView === 'shop' && <CollectionsGrid />}
+            {/* Show Hero only on main Shop view, not Wishlist, and only if not searching */}
+            {currentView === 'shop' && !searchQuery && (
+              <>
+                <Hero />
+                <CollectionsGrid />
+              </>
+            )}
 
             <section id="shop-section" className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
               
               <div className="flex flex-col items-center mb-12 space-y-4">
                 <h2 className="font-serif text-3xl md:text-4xl text-stone-900">
-                  {currentView === 'wishlist' ? 'Your Wishlist' : 'The Collection'}
+                  {searchQuery 
+                    ? `Search Results for "${searchQuery}"`
+                    : (currentView === 'wishlist' ? 'Your Wishlist' : 'The Collection')}
                 </h2>
                 <div className="w-16 h-px bg-stone-300" />
               </div>
 
-              {/* Category Filter - Only show in Shop view */}
+              {/* Category Filter - Only show in Shop view if not searching (or allow refinement) */}
               {currentView === 'shop' && (
                 <div className="flex overflow-x-auto snap-x-mandatory pb-6 mb-8 gap-4 justify-start md:justify-center no-scrollbar">
                   {CATEGORIES.map((cat) => (
@@ -229,12 +280,17 @@ function App() {
               ) : (
                 <div className="text-center py-20 space-y-4">
                   <p className="text-stone-500 text-lg">
-                    {currentView === 'wishlist' 
-                      ? "Your wishlist is currently empty." 
-                      : "No products found in this category."}
+                    {searchQuery
+                      ? "No items match your search."
+                      : (currentView === 'wishlist' 
+                          ? "Your wishlist is currently empty." 
+                          : "No products found in this category.")}
                   </p>
-                  {currentView === 'wishlist' && (
-                    <Button onClick={() => navigateTo('shop')}>
+                  {(currentView === 'wishlist' || searchQuery) && (
+                    <Button onClick={() => {
+                      setSearchQuery('');
+                      navigateTo('shop');
+                    }}>
                       Browse Collection
                     </Button>
                   )}
@@ -268,7 +324,7 @@ function App() {
           {toast.message}
         </div>
       </div>
-      
+
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-container">
@@ -277,8 +333,7 @@ function App() {
           <button 
             className="md:hidden p-2 -ml-2 text-stone-900"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            title="Open menu"
-            aria-label="Open menu"
+            title="Open mobile menu"
           >
             <Menu strokeWidth={1.5} />
           </button>
@@ -317,54 +372,36 @@ function App() {
 
           {/* Actions */}
           <div className="flex items-center gap-4">
-            {/* Search Icon triggers bar */}
-            <div className="relative hidden md:block">
-              {!searchOpen ? (
-                <button
-                  className="nav-icon-btn"
-                  title="Search"
-                  aria-label="Search"
-                  onClick={() => setSearchOpen(true)}
-                >
-                  <Search className="w-5 h-5" strokeWidth={1.5} />
-                </button>
-              ) : (
-                <form
-                  className="searchbar-expand"
-                  onSubmit={e => e.preventDefault()}
-                >
-                  <span className="searchbar-icon">
-                    <Search className="w-5 h-5" strokeWidth={1.5} />
-                  </span>
-                  <input
-                    type="text"
-                    className="searchbar-input"
-                    autoFocus
-                    placeholder="Search products..."
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                    aria-label="Search products"
-                  />
-                  <button
-                    type="button"
-                    className="searchbar-close"
-                    title="Close search"
-                    aria-label="Close search"
-                    onClick={() => { setSearchOpen(false); setSearchTerm(''); }}
-                  >
-                    ×
-                  </button>
-                </form>
-              )}
+            
+            {/* Collapsible Search */}
+            <div className={`hidden md:flex search-container ${isSearchOpen ? 'active' : ''}`}>
+              <div className={`search-input-wrapper ${isSearchOpen ? 'open' : ''}`}>
+                <input 
+                  ref={searchInputRef}
+                  type="text" 
+                  className="search-input"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onBlur={() => !searchQuery && setIsSearchOpen(false)}
+                />
+              </div>
+              <button 
+                className={`nav-icon-btn ${isSearchOpen ? 'active' : ''}`}
+                onClick={toggleSearch}
+                aria-label="Toggle Search"
+              >
+                <Search className="w-5 h-5" strokeWidth={1.5} />
+              </button>
             </div>
-
+            
             {/* Account Button */}
             <button 
-              className={`hidden md:flex nav-icon-btn ${currentView === 'account' ? 'active' : ''}`}
+              className={`hidden md:flex nav-icon-btn ${currentView === 'account' || currentView === 'login' ? 'active' : ''}`}
               onClick={() => navigateTo('account')}
               aria-label="My Account"
             >
-              <User className="w-5 h-5" strokeWidth={1.5} fill={currentView === 'account' ? 'currentColor' : 'none'} />
+              <User className="w-5 h-5" strokeWidth={1.5} fill={(currentView === 'account' || currentView === 'login') ? 'currentColor' : 'none'} />
             </button>
 
             <button 
@@ -413,7 +450,6 @@ function App() {
         <button 
           className={`flex flex-col items-center gap-1 ${currentView === 'about' || currentView === 'journal' ? 'text-stone-900' : 'text-stone-400'}`}
            onClick={() => {
-             // Basic mobile logic: Toggle menu or just go to Journal as a secondary discovery tab
              navigateTo('journal');
            }}
         >
@@ -421,18 +457,11 @@ function App() {
           <span className="text-[10px] font-medium">Read</span>
         </button>
         <button 
-          className={`flex flex-col items-center gap-1 ${currentView === 'account' ? 'text-stone-900' : 'text-stone-400'}`}
+          className={`flex flex-col items-center gap-1 ${currentView === 'account' || currentView === 'login' ? 'text-stone-900' : 'text-stone-400'}`}
           onClick={() => navigateTo('account')}
         >
           <User className="w-5 h-5" strokeWidth={1.5} />
           <span className="text-[10px] font-medium">Account</span>
-        </button>
-        <button 
-          className={`flex flex-col items-center gap-1 ${currentView === 'wishlist' ? 'text-stone-900' : 'text-stone-400'}`}
-          onClick={() => navigateTo('wishlist')}
-        >
-          <Heart className="w-5 h-5" strokeWidth={1.5} />
-          <span className="text-[10px] font-medium">Saved</span>
         </button>
         <button 
           className="flex flex-col items-center gap-1 text-stone-400 hover:text-stone-900"
